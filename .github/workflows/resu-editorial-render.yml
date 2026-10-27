@@ -1,0 +1,81 @@
+name: RESU editorial render
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "manuscript/**"
+      - "references/**"
+      - "analysis/90_prepare_editorial_snapshot.R"
+      - "analysis/90_remote_editorial_pipeline.R"
+      - "analysis/91_build_resu_submission.R"
+      - "analysis/93_make_resu_reference.py"
+      - "analysis/94_postprocess_resu_docx.py"
+      - "analysis/95_count_rendered_docx.R"
+      - "analysis/97_reference_inventory.R"
+      - "analysis/98_editorial_limits.R"
+      - "data/editorial_snapshot/**"
+      - ".github/workflows/resu-editorial-render.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install R render dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::knitr
+            any::rmarkdown
+          cache-version: 1
+
+      - name: Install Python DOCX dependency
+        run: |
+          python -m pip install --disable-pip-version-check python-docx lxml
+          python -c "import docx, lxml; print('PASS python-docx')"
+
+      - name: Generate RESU reference DOCX
+        run: python analysis/93_make_resu_reference.py
+
+      - name: Run remote editorial pipeline
+        run: Rscript analysis/90_remote_editorial_pipeline.R
+
+      - name: Postprocess and audit RESU DOCX
+        run: python analysis/94_postprocess_resu_docx.py
+
+      - name: Confirm final word limit
+        run: |
+          Rscript -e 'e <- new.env(parent = globalenv()); source("analysis/95_count_rendered_docx.R", local = e); n <- e$count_docx_words("manuscript/article-resu-submit.docx"); if (n > 9000) stop("BLOCK: ", n, " palabras"); cat("PASS Word final postprocesado: ", n, " / 9000 palabras.\\n", sep="")'
+
+      - name: Upload RESU Word artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resu-editorial-docx
+          path: |
+            manuscript/article-resu-submit.docx
+            manuscript/article-resu-elements.docx
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,86 @@
+# Cuadros y figura
+
+```{r}
+#| label: setup-elementos-resu
+#| include: false
+
+flujo <- read.csv("../outputs/tables/flujo_muestral.csv", check.names = FALSE)
+dimensiones <- read.csv("../outputs/tables/dimensiones_m1_m2.csv", check.names = FALSE)
+ranking <- read.csv("../outputs/tables/indicadores_m2_ranking.csv", check.names = FALSE)
+sensibilidad <- read.csv("../outputs/tables/sensibilidad_muestras.csv", check.names = FALSE)
+
+etiquetar_muestra <- function(x) {
+  out <- x
+  out[x == "M1_autodeclarada_completa"] <- "M1"
+  out[x == "M2_internacional_confirmada"] <- "M2"
+  out[x == "M2_no_virtual"] <- "M2 no virtual"
+  out[x == "M2_virtual"] <- "M2 virtual/COIL"
+  out
+}
+```
+
+```{r}
+#| label: tbl-resu-flujo-final
+#| tbl-cap: "Flujo desde la base institucional hasta las muestras analíticas"
+#| echo: false
+
+tab <- flujo
+names(tab) <- c("Etapa", "n")
+knitr::kable(tab, align = c("l", "r"), row.names = FALSE)
+```
+
+```{r}
+#| label: tbl-resu-dimensiones-final
+#| tbl-cap: "Resultados por agrupación en M1 y M2"
+#| echo: false
+
+etiquetas <- c(
+  aprendizaje = "Resultados de aprendizaje",
+  intercultural = "Competencias interculturales",
+  profesional = "Competencias profesionales y empleabilidad",
+  institucional = "Impacto institucional",
+  personal = "Impacto personal"
+)
+tab <- dimensiones[, c("muestra", "dimension", "media")]
+tab$Muestra <- etiquetar_muestra(tab$muestra)
+tab$Agrupación <- unname(etiquetas[tab$dimension])
+tab$Media <- formatC(tab$media, format = "f", digits = 2, decimal.mark = ",")
+tab <- tab[, c("Muestra", "Agrupación", "Media")]
+knitr::kable(tab, align = c("l", "l", "r"), row.names = FALSE)
+```
+
+```{r}
+#| label: tbl-resu-ranking-final
+#| tbl-cap: "Indicadores con mayor y menor valoración relativa en M2"
+#| echo: false
+
+seleccion <- rbind(utils::head(ranking, 5), utils::tail(ranking, 5))
+seleccion$Media <- formatC(seleccion$media, format = "f", digits = 2, decimal.mark = ",")
+seleccion <- seleccion[, c("posicion", "dimension", "indicador", "n_validos", "Media")]
+names(seleccion) <- c("Pos.", "Agrupación", "Indicador", "n", "Media")
+knitr::kable(seleccion, align = c("r", "l", "l", "r", "r"), row.names = FALSE)
+```
+
+```{r}
+#| label: tbl-resu-sensibilidad-final
+#| tbl-cap: "Sensibilidad descriptiva por muestra y modalidad"
+#| echo: false
+
+tab <- sensibilidad[, c("muestra", "n", "global", "personal", "institucional", "brecha_personal_institucional")]
+tab$Muestra <- etiquetar_muestra(tab$muestra)
+for (v in c("global", "personal", "institucional", "brecha_personal_institucional")) {
+  tab[[v]] <- formatC(tab[[v]], format = "f", digits = 2, decimal.mark = ",")
+}
+tab <- tab[, c("Muestra", "n", "global", "personal", "institucional", "brecha_personal_institucional")]
+names(tab) <- c("Muestra", "n", "Global", "Personal", "Institucional", "Contraste P–I")
+knitr::kable(tab, align = c("l", "r", "r", "r", "r", "r"), row.names = FALSE)
+```
+
+```{r}
+#| label: fig-resu-dimensiones-final
+#| fig-cap: "Perfil multidimensional en M1 y M2"
+#| echo: false
+#| out-width: "90%"
+
+knitr::include_graphics("../outputs/figures/dimensiones_m1_m2.png")
+```

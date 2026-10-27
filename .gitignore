@@ -1,0 +1,40 @@
+# Datos sensibles / originales
+/data/raw/*
+!/data/raw/README.md
+
+# Datos procesados derivados de microdatos
+/data/processed/*.csv
+/data/processed/*.rds
+
+# Material local privado (NUNCA versionar)
+/local-private/
+/private/
+
+# Salidas reproducibles
+/outputs/figures/*
+!/outputs/figures/.gitkeep
+/outputs/tables/*
+!/outputs/tables/.gitkeep
+
+# Plantillas generadas localmente
+/templates/resu-reference.docx
+
+# R / RStudio
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+renv/library/
+renv/staging/
+
+# Quarto
+/.quarto/
+/_freeze/
+/manuscript/*.html
+/manuscript/*.pdf
+/manuscript/*.docx
+**/*.quarto_ipynb
+
+# Sistema
+.DS_Store
+Thumbs.db

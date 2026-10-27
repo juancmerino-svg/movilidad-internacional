@@ -1,0 +1,107 @@
+---
+title: "De la experiencia internacional a la capacidad institucional: evidencia de una universidad pública ecuatoriana"
+lang: es
+format:
+  html: default
+  docx: default
+bibliography: ../references/references.bib
+execute:
+  echo: false
+---
+
+# Resumen
+
+**BORRADOR — NO SUBMISSION READY.** Se redactará al final con un máximo de 100 palabras. Objetivo, metodología y resultados deberán provenir de la versión científica cerrada y los valores cuantitativos serán generados por R.
+
+**Palabras clave:** movilidad internacional; internacionalización de la educación superior; transferencia institucional; resultados de aprendizaje; educación superior.
+
+# Abstract
+
+**DRAFT — NOT SUBMISSION READY.** The final abstract will contain no more than 100 words and will be translated only after the Spanish abstract has been approved by the authors.
+
+**Keywords:** international mobility; higher education internationalization; institutional transfer; learning outcomes; higher education.
+
+# 1. Introducción
+
+La internacionalización de la educación superior ha dejado de entenderse únicamente como la acumulación de actividades transfronterizas para concebirse como un proceso intencional que incorpora dimensiones internacionales, interculturales y globales en los propósitos y funciones de las instituciones. Esta perspectiva desplaza la atención desde el número de convenios, viajes o intercambios hacia la manera en que esas actividades contribuyen a la calidad de la educación, la investigación y la vinculación con la sociedad [@dewit_hunter_2015]. Desde una lógica institucional, además, la internacionalización requiere políticas, liderazgo y articulación con las misiones universitarias; de otro modo, las iniciativas internacionales pueden permanecer como actividades periféricas con una integración limitada en la organización [@hudzik_2015].
+
+La movilidad de estudiantes, docentes e investigadores constituye uno de los mecanismos más visibles de ese proceso, pero no equivale por sí sola a internacionalización institucional. Su relevancia depende de los resultados que genera y de la capacidad de la universidad para aprovecharlos después de la experiencia. La literatura ha documentado ampliamente beneficios asociados con los programas de estudio y movilidad internacional. El metaanálisis de @varela_2017, basado en 72 investigaciones, encontró resultados positivos en aprendizaje cognitivo o lingüístico, actitudes multiculturales y adaptación intercultural. De forma complementaria, la revisión sistemática de @roy_etal_2019 organiza los resultados de la movilidad en ámbitos culturales, personales y profesionales, mientras estudios de síntesis posteriores subrayan tanto el potencial formativo de las experiencias internacionales como la heterogeneidad de sus diseños y formas de evaluación [@goldstein_2022; @mittelmeier_etal_2024]. En consecuencia, las valoraciones favorables reportadas por los participantes constituyen evidencia relevante sobre su experiencia, pero no deben confundirse automáticamente con efectos causales netos.
+
+El énfasis predominante en resultados individuales deja abierta una segunda cuestión: qué ocurre con el aprendizaje, los contactos y las disposiciones generadas por la experiencia cuando el participante regresa o cuando concluye una experiencia internacional virtual. La transformación individual no implica necesariamente que esos resultados se incorporen al currículo, se conviertan en proyectos, consoliden redes de investigación o modifiquen prácticas institucionales. Esta transición requiere mecanismos organizacionales de seguimiento, transferencia, intermediación y aprovechamiento. Por ello, evaluar una experiencia internacional únicamente por satisfacción o aprendizaje puede ofrecer una imagen incompleta de su contribución a la internacionalización de la institución.
+
+Esta dimensión institucional no es desconocida en la literatura latinoamericana. En la Universidad Veracruzana, @ramirez_ortega_2019 analizaron el impacto institucional de la movilidad internacional estudiantil mediante categorías que incluyen convenios, integración curricular, internacionalización en casa, organización académica, seguimiento y apoyos. Sus resultados muestran precisamente que algunas actividades asociadas con la movilidad alcanzan mayor desarrollo institucional que otras. Este antecedente impide presentar el estudio de los resultados institucionales como una novedad en sí misma y orienta la pregunta hacia un problema más específico: la relación entre aquello que la experiencia produce o fortalece en el participante y aquello que posteriormente logra incorporarse a capacidades y prácticas organizacionales.
+
+El contexto latinoamericano refuerza la pertinencia de esa pregunta. La literatura reciente muestra una agenda regional en expansión que incluye movilidad, internacionalización curricular, gestión institucional y políticas lingüísticas [@vazquez_mancilla_2025]. Sin embargo, la evidencia sintetizada por estos autores también refleja una asimetría en el grado de institucionalización: las oficinas internacionales se concentran ampliamente en iniciativas de movilidad, mientras son menos frecuentes las políticas institucionales de internacionalización curricular y los sistemas formales de aseguramiento y evaluación de las actividades internacionales. Esta diferencia no demuestra por sí misma una falta de transferencia, pero sugiere que aumentar la participación en experiencias internacionales y convertir sus resultados en capacidades institucionales son desafíos relacionados, aunque distintos.
+
+Sobre esta base, el presente artículo examina el caso de la Universidad Nacional de Loja (UNL), una universidad pública ecuatoriana que dispone de información institucional sobre resultados reportados de experiencias internacionales. El interés analítico no consiste en demostrar causalmente que la movilidad produce determinados efectos ni en establecer un índice nuevo de internacionalización. El estudio compara, dentro de una misma arquitectura de 25 indicadores, dimensiones próximas al participante —aprendizaje, competencias interculturales, desarrollo profesional y resultados personales— con una dimensión institucional vinculada con aplicación académica, redes, proyectos e internacionalización curricular. La diferencia observada entre estos planos se utiliza como una **brecha de transferencia** descriptiva: una lente analítica para identificar dónde los resultados individuales aparecen con mayor intensidad que aquellos que requieren mediación organizacional.
+
+La pregunta que orienta la investigación es: **¿cómo se distribuyen los resultados reportados de las experiencias internacionales entre dimensiones individuales e institucionales y qué revela el caso de la Universidad Nacional de Loja sobre la transferencia del aprendizaje internacional hacia capacidades organizacionales?** En correspondencia, el objetivo es analizar dichos resultados, con énfasis en la relación entre los beneficios próximos al participante y aquellos cuya materialización requiere mecanismos institucionales, y evaluar la robustez descriptiva de ese patrón ante una definición más estricta de experiencia internacional. La contribución propuesta es acotada: aportar evidencia reproducible de una universidad pública ecuatoriana, analizar conjuntamente resultados individuales e institucionales dentro del mismo instrumento y mostrar cómo las conclusiones descriptivas cambian —o se mantienen— cuando la muestra institucional original se somete a una clasificación más rigurosa de internacionalidad.
+
+# 2. Bases teóricas
+
+## 2.1. Movilidad dentro de la internacionalización integral
+
+La movilidad se tratará como mecanismo de internacionalización, no como sinónimo de internacionalización institucional [@dewit_hunter_2015; @hudzik_2015].
+
+## 2.2. Resultados individuales de las experiencias internacionales
+
+Esta sección integrará resultados de aprendizaje, competencias interculturales, desarrollo personal y resultados profesionales, atendiendo a las cautelas metodológicas señaladas por la literatura [@varela_2017; @roy_etal_2019; @goldstein_2022; @mittelmeier_etal_2024].
+
+## 2.3. Transferencia hacia capacidades institucionales
+
+Se examinarán aplicación académica, redes, proyectos e internacionalización curricular como resultados que requieren mecanismos organizacionales. El antecedente latinoamericano de @ramirez_ortega_2019 se utilizará como referencia directa y no como evidencia de ausencia de estudios previos.
+
+## 2.4. Brecha de transferencia como lente analítica
+
+En este artículo, “brecha de transferencia” será una etiqueta descriptiva para la diferencia observada entre dimensiones cercanas al participante y dimensiones institucionales. No se presentará como escala validada, índice causal ni constructo establecido en la literatura.
+
+# 3. Metodología
+
+## 3.1. Diseño
+
+Estudio de caso cuantitativo, descriptivo y generador de hipótesis. El diseño no permite inferencia causal.
+
+## 3.2. Fuente de datos e instrumento
+
+La fuente es la base institucional que alimenta el dashboard de movilidad internacional de la UNL. El instrumento contiene 25 ítems Likert organizados en cinco dimensiones de cinco ítems cada una.
+
+## 3.3. Definición de muestras
+
+- **M0:** 337 respuestas totales; utilizada para auditoría y descripción del levantamiento.
+- **M1:** 45 participantes con movilidad autodeclarada y al menos 15/25 ítems válidos; reproduce la lógica institucional original.
+- **M2:** 26 experiencias internacionales confirmadas mediante modalidad y destino/institución; definición provisional sujeta a aprobación de los autores.
+
+M1 se utilizará como análisis de sensibilidad. Los 178 casos sin movilidad declarada que respondieron al menos 15 ítems no se tratarán como grupo de control.
+
+## 3.4. Estrategia analítica
+
+Las puntuaciones se calcularán primero por participante y dimensión y posteriormente se agregarán por muestra. Se presentarán medias por dimensión, ranking de indicadores, diferencia descriptiva personal–institucional y análisis de sensibilidad M1–M2. La comparación entre experiencias virtuales y no virtuales será exclusivamente exploratoria.
+
+## 3.5. Alcance de la inferencia
+
+Los resultados representan valoraciones autorreportadas de participantes. La ausencia de pretest, grupo de comparación o estrategia cuasiexperimental impide interpretar las diferencias como efectos causales netos.
+
+# 4. Resultados
+
+Los resultados se incorporarán únicamente mediante objetos generados por los scripts reproducibles del repositorio.
+
+Estructura prevista:
+
+1. flujo muestral y clasificación;
+2. perfil multidimensional de M2;
+3. indicadores con mayor y menor valoración relativa;
+4. diferencia descriptiva entre resultados personales e institucionales;
+5. sensibilidad M1–M2;
+6. heterogeneidad exploratoria por modalidad.
+
+# 5. Discusión
+
+La discusión confrontará el patrón empírico con la literatura de resultados individuales, internacionalización integral e institucionalización. La interpretación central será organizacional y descriptiva, no causal.
+
+# 6. Limitaciones
+
+Se documentarán explícitamente tamaño muestral, autorreporte, selección, ausencia de contrafactual, heterogeneidad de modalidades, efecto techo, clasificación retrospectiva y alcance de estudio de caso.
+
+# 7. Conclusiones
+
+Las conclusiones se limitarán al patrón observado en el caso y a sus implicaciones para la evaluación y gestión de experiencias internacionales.

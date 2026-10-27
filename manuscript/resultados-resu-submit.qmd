@@ -1,0 +1,59 @@
+# 4. Resultados
+
+```{r}
+#| label: setup-resultados-resu-submit
+#| include: false
+
+archivos_requeridos <- c(
+  "../outputs/tables/flujo_muestral.csv",
+  "../outputs/tables/dimensiones_m1_m2.csv",
+  "../outputs/tables/resumen_muestras.csv",
+  "../outputs/tables/indicadores_m2_ranking.csv",
+  "../outputs/tables/sensibilidad_muestras.csv",
+  "../outputs/figures/dimensiones_m1_m2.png"
+)
+faltantes <- archivos_requeridos[!file.exists(archivos_requeridos)]
+if (length(faltantes) > 0) stop("Faltan salidas reproducibles: ", paste(faltantes, collapse = ", "))
+
+flujo <- read.csv("../outputs/tables/flujo_muestral.csv", check.names = FALSE)
+dimensiones <- read.csv("../outputs/tables/dimensiones_m1_m2.csv", check.names = FALSE)
+resumen <- read.csv("../outputs/tables/resumen_muestras.csv", check.names = FALSE)
+ranking <- read.csv("../outputs/tables/indicadores_m2_ranking.csv", check.names = FALSE)
+sensibilidad <- read.csv("../outputs/tables/sensibilidad_muestras.csv", check.names = FALSE)
+
+m1 <- resumen[resumen$muestra == "M1_autodeclarada_completa", ]
+m2 <- resumen[resumen$muestra == "M2_internacional_confirmada", ]
+dim_m1 <- dimensiones[dimensiones$muestra == "M1_autodeclarada_completa", ]
+mod_nv <- sensibilidad[sensibilidad$muestra == "M2_no_virtual", ]
+mod_v <- sensibilidad[sensibilidad$muestra == "M2_virtual", ]
+valor_dim_m1 <- function(nombre) dim_m1$media[dim_m1$dimension == nombre]
+fmt2 <- function(x) formatC(x, format = "f", digits = 2, decimal.mark = ",")
+```
+
+## 4.1. Muestras analíticas y perfil general
+
+La base institucional reúne `r flujo$n[flujo$etapa == "Base completa (M0)"]` respuestas. `r flujo$n[flujo$etapa == "Movilidad autodeclarada"]` personas indicaron haber participado en algún programa de movilidad y `r m1$n` cumplieron el criterio de al menos 15 respuestas válidas entre los 25 ítems, conformando M1. La clasificación conservadora utilizada como análisis de sensibilidad confirmó internacionalidad en `r m2$n` experiencias (M2): `r mod_nv$n` no virtuales y `r mod_v$n` virtuales o COIL.
+
+**[Insertar Tabla 1 aproximadamente aquí]**
+
+La media global de M1 fue `r fmt2(m1$global)` sobre 5. Las mayores valoraciones se observaron en resultados de aprendizaje (`r fmt2(valor_dim_m1("aprendizaje"))`), competencias interculturales (`r fmt2(valor_dim_m1("intercultural"))`) e impacto personal (`r fmt2(valor_dim_m1("personal"))`). Las agrupaciones profesional e institucional registraron `r fmt2(valor_dim_m1("profesional"))` y `r fmt2(valor_dim_m1("institucional"))`, respectivamente. La diferencia descriptiva entre impacto personal e institucional fue de `r fmt2(m1$brecha_personal_institucional)` puntos.
+
+**[Insertar Tabla 2 aproximadamente aquí]**
+
+**[Insertar Figura 1 aproximadamente aquí]**
+
+## 4.2. Indicadores y sensibilidad a la definición de internacionalidad
+
+Los 25 indicadores presentan valoraciones altas, aunque con diferencias internas. Tolerancia y respeto hacia la diversidad, trabajo con personas de otras culturas e interés por colaborar internacionalmente se encuentran entre los mejor valorados. En las posiciones relativamente menores aparecen competencias en idioma extranjero, participación posterior en redes o proyectos internacionales e internacionalización de la carrera o programa. Estas posiciones expresan diferencias dentro del instrumento y no valoraciones negativas en términos absolutos.
+
+**[Insertar Tabla 3 aproximadamente aquí]**
+
+Al aplicar la definición más restrictiva de M2, las medias aumentan en varias agrupaciones y la diferencia personal–institucional disminuye frente a M1. Las magnitudes descriptivas cambian, por tanto, con la regla utilizada para definir internacionalidad. M2 se conserva como análisis de sensibilidad y no reemplaza a la muestra principal.
+
+**[Insertar Tabla 4 aproximadamente aquí]**
+
+## 4.3. Heterogeneidad por modalidad y síntesis
+
+Dentro de M2, la diferencia personal–institucional es menor en las experiencias no virtuales y mayor en las virtuales o COIL. Dado el reducido tamaño de estos subgrupos, el patrón se presenta como evidencia descriptiva generadora de hipótesis y no como una comparación inferencial entre modalidades.
+
+El perfil combina valoraciones elevadas con diferencias relativas entre tipos de resultados. Aprendizaje, interculturalidad e impacto personal se sitúan por encima de varios indicadores relacionados con continuidad posterior, redes, proyectos e internacionalización curricular. Además, la comparación M1–M2 muestra que las magnitudes dependen de la definición de experiencia internacional. Sobre esta base se discute la transferencia institucional como problema de evaluación y gestión, sin convertir la diferencia entre agrupaciones en un índice validado ni en evidencia causal.

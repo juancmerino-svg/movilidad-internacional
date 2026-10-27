@@ -1,0 +1,13 @@
+---
+title: "Cuadros y figura — manuscrito RESU"
+lang: es
+format:
+  docx:
+    reference-doc: ../templates/resu-reference.docx
+execute:
+  echo: false
+  freeze: false
+  execute-dir: project
+---
+
+{{< include elementos-resu-submit.qmd >}}

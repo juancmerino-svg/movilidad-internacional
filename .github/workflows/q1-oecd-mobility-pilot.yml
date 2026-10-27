@@ -1,0 +1,42 @@
+name: Q1 OECD mobility pilot
+
+concurrency:
+  group: q1-oecd-mobility-pilot
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - pilot-q1-global-mobility
+    paths:
+      - "pilot_q1/02_audit_oecd_bilateral.R"
+      - ".github/workflows/q1-oecd-mobility-pilot.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::readr
+            any::dplyr
+            any::stringr
+      - name: Download OECD UOE mobility CSV
+        run: |
+          curl -L --fail --retry 4 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+            "https://sdmx.oecd.org/public/rest/data/OECD.EDU.IMEP,DSD_EAG_UOE_NON_FIN_STUD@DF_UOE_NF_RAW_MOB,1.1/?dimensionAtObservation=AllDimensions&format=csvfilewithlabels" \
+            -o pilot_q1/oecd_mob.csv
+          ls -lh pilot_q1/oecd_mob.csv
+          head -n 2 pilot_q1/oecd_mob.csv
+      - name: Run OECD feasibility audit
+        run: Rscript pilot_q1/02_audit_oecd_bilateral.R
+      - name: Upload OECD audit outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: q1-oecd-mobility-pilot
+          path: pilot_q1/oecd_output
+          retention-days: 14

@@ -1,0 +1,105 @@
+# 4. Resultados
+
+```{r}
+#| label: setup-resultados
+#| include: false
+
+archivos_requeridos <- c(
+  "../outputs/tables/flujo_muestral.csv",
+  "../outputs/tables/dimensiones_m1_m2.csv",
+  "../outputs/tables/resumen_muestras.csv",
+  "../outputs/tables/indicadores_m1_m2.csv",
+  "../outputs/tables/indicadores_m2_ranking.csv",
+  "../outputs/tables/sensibilidad_muestras.csv",
+  "../outputs/figures/dimensiones_m1_m2.png"
+)
+
+faltantes <- archivos_requeridos[!file.exists(archivos_requeridos)]
+if (length(faltantes) > 0) stop("Faltan salidas reproducibles: ", paste(faltantes, collapse = ", "))
+
+flujo <- read.csv("../outputs/tables/flujo_muestral.csv", check.names = FALSE)
+dimensiones <- read.csv("../outputs/tables/dimensiones_m1_m2.csv", check.names = FALSE)
+resumen <- read.csv("../outputs/tables/resumen_muestras.csv", check.names = FALSE)
+indicadores <- read.csv("../outputs/tables/indicadores_m1_m2.csv", check.names = FALSE)
+ranking_m2 <- read.csv("../outputs/tables/indicadores_m2_ranking.csv", check.names = FALSE)
+sensibilidad <- read.csv("../outputs/tables/sensibilidad_muestras.csv", check.names = FALSE)
+
+m1 <- resumen[resumen$muestra == "M1_autodeclarada_completa", ]
+m2 <- resumen[resumen$muestra == "M2_internacional_confirmada", ]
+mod_nv <- sensibilidad[sensibilidad$muestra == "M2_no_virtual", ]
+mod_v <- sensibilidad[sensibilidad$muestra == "M2_virtual", ]
+
+dim_m1 <- dimensiones[dimensiones$muestra == "M1_autodeclarada_completa", ]
+dim_m2 <- dimensiones[dimensiones$muestra == "M2_internacional_confirmada", ]
+valor_dim <- function(tabla, nombre) tabla$media[tabla$dimension == nombre]
+fmt2 <- function(x) formatC(x, format = "f", digits = 2, decimal.mark = ",")
+
+ranking_m1 <- indicadores[indicadores$muestra == "M1_autodeclarada_completa", ]
+ranking_m1 <- ranking_m1[order(-ranking_m1$media, ranking_m1$indicador), ]
+ranking_m1$posicion <- seq_len(nrow(ranking_m1))
+```
+
+## 4.1. Muestras analíticas y perfil general
+
+La base institucional reúne `r flujo$n[flujo$etapa == "Base completa (M0)"]` respuestas. `r flujo$n[flujo$etapa == "Movilidad autodeclarada"]` personas indicaron haber participado en movilidad y `r m1$n` cumplieron el criterio de al menos 15 respuestas válidas entre los 25 ítems, conformando M1. La clasificación conservadora utilizada como análisis de sensibilidad confirmó internacionalidad en `r m2$n` experiencias (M2); `r flujo$n[flujo$etapa == "M1 no confirmada como internacional"]` casos de M1 no ingresaron a ese subconjunto.
+
+```{r}
+#| label: tbl-flujo-muestral
+#| tbl-cap: "Flujo desde la base institucional hasta las muestras analíticas"
+flujo_tabla <- flujo
+names(flujo_tabla) <- c("Etapa", "n")
+knitr::kable(flujo_tabla, align = c("l", "r"))
+```
+
+La media global de M1 fue `r fmt2(m1$global)` sobre 5. Las mayores valoraciones se observaron en resultados de aprendizaje (`r fmt2(valor_dim(dim_m1, "aprendizaje"))`), competencias interculturales (`r fmt2(valor_dim(dim_m1, "intercultural"))`) e impacto personal (`r fmt2(valor_dim(dim_m1, "personal"))`). Las agrupaciones profesional e institucional registraron `r fmt2(valor_dim(dim_m1, "profesional"))` y `r fmt2(valor_dim(dim_m1, "institucional"))`, respectivamente.
+
+La diferencia descriptiva entre impacto personal e institucional fue de `r fmt2(m1$brecha_personal_institucional)` puntos. Resume una parte del perfil observado y no constituye un índice validado de transferencia institucional.
+
+```{r}
+#| label: tbl-dimensiones-m1
+#| tbl-cap: "Resultados por agrupación en la muestra principal (M1)"
+orden <- c("aprendizaje", "intercultural", "profesional", "institucional", "personal")
+etiquetas <- c(aprendizaje = "Resultados de aprendizaje", intercultural = "Competencias interculturales", profesional = "Competencias profesionales y empleabilidad", institucional = "Impacto institucional", personal = "Impacto personal")
+tab_dim <- dim_m1[match(orden, dim_m1$dimension), c("dimension", "media")]
+tab_dim$Agrupación <- unname(etiquetas[tab_dim$dimension])
+tab_dim$Media <- round(tab_dim$media, 2)
+knitr::kable(tab_dim[, c("Agrupación", "Media")], align = c("l", "r"))
+```
+
+```{r}
+#| label: fig-dimensiones-m1-m2
+#| fig-cap: "Perfil multidimensional en M1 y M2"
+#| out-width: "90%"
+knitr::include_graphics("../outputs/figures/dimensiones_m1_m2.png")
+```
+
+## 4.2. Indicadores y sensibilidad a la definición de internacionalidad
+
+En M1, los indicadores mejor valorados se concentran en recomendación de la experiencia, conocimientos académicos, interés por la investigación, respeto a la diversidad e interés por colaborar internacionalmente. En las posiciones relativamente menores aparecen participación posterior en redes o proyectos internacionales, fortalecimiento de la internacionalización de la carrera o programa, competencias en idioma extranjero y aplicación de metodologías o contenidos en actividades académicas. Incluso estos indicadores presentan medias altas, de modo que el orden se interpreta de manera relativa dentro del instrumento.
+
+```{r}
+#| label: tbl-ranking-m1
+#| tbl-cap: "Indicadores con mayor y menor valoración relativa en M1"
+seleccion <- rbind(utils::head(ranking_m1, 5), utils::tail(ranking_m1, 5))
+seleccion$Media <- round(seleccion$media, 2)
+seleccion <- seleccion[, c("posicion", "dimension", "indicador", "n_validos", "Media")]
+names(seleccion) <- c("Posición", "Agrupación", "Indicador", "n válido", "Media")
+knitr::kable(seleccion, align = c("r", "l", "l", "r", "r"))
+```
+
+Con la definición más restrictiva de M2, las medias aumentan en las cinco agrupaciones. La media institucional pasa de `r fmt2(valor_dim(dim_m1, "institucional"))` en M1 a `r fmt2(valor_dim(dim_m2, "institucional"))` en M2, mientras la diferencia personal–institucional se reduce de `r fmt2(m1$brecha_personal_institucional)` a `r fmt2(m2$brecha_personal_institucional)` puntos. El patrón de valoraciones elevadas se conserva, pero sus magnitudes dependen de la regla de clasificación. M2 se mantiene, por ello, como comprobación conservadora y no sustituye a la muestra principal.
+
+## 4.3. Heterogeneidad por modalidad y síntesis
+
+Dentro de M2, `r mod_nv$n` experiencias fueron clasificadas como no virtuales y `r mod_v$n` como virtuales o COIL. La diferencia personal–institucional fue de `r fmt2(mod_nv$brecha_personal_institucional)` puntos en las experiencias no virtuales y `r fmt2(mod_v$brecha_personal_institucional)` en las virtuales. El tamaño reducido y la selección no aleatoria de estos subgrupos impiden una comparación inferencial entre modalidades; el contraste se presenta únicamente como evidencia descriptiva generadora de hipótesis.
+
+```{r}
+#| label: tbl-sensibilidad-modalidad
+#| tbl-cap: "Sensibilidad descriptiva por muestra y modalidad"
+sens_tab <- sensibilidad[, c("muestra", "n", "global", "personal", "institucional", "brecha_personal_institucional")]
+sens_tab[, c("global", "personal", "institucional", "brecha_personal_institucional")] <- round(sens_tab[, c("global", "personal", "institucional", "brecha_personal_institucional")], 2)
+names(sens_tab) <- c("Muestra", "n", "Global", "Personal", "Institucional", "Contraste personal–institucional")
+knitr::kable(sens_tab, align = c("l", "r", "r", "r", "r", "r"))
+```
+
+El perfil combina valoraciones altas con diferencias relativas entre tipos de resultados. Aprendizaje, competencias interculturales e impacto personal se sitúan por encima de varios indicadores vinculados con continuidad posterior, redes, proyectos e internacionalización curricular. La comparación M1–M2 confirma, además, que la definición de internacionalidad modifica las magnitudes observadas. La discusión posterior se apoya en el conjunto de agrupaciones e indicadores y no en un único índice de transferencia.

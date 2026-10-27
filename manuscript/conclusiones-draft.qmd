@@ -1,0 +1,23 @@
+# 7. Conclusiones
+
+```{r}
+#| label: setup-conclusiones
+#| include: false
+
+resumen_conc <- read.csv("../outputs/tables/resumen_muestras.csv", check.names = FALSE)
+dimensiones_conc <- read.csv("../outputs/tables/dimensiones_m1_m2.csv", check.names = FALSE)
+
+m1_conc <- resumen_conc[resumen_conc$muestra == "M1_autodeclarada_completa", ]
+m2_conc <- resumen_conc[resumen_conc$muestra == "M2_internacional_confirmada", ]
+dim_m1_conc <- dimensiones_conc[dimensiones_conc$muestra == "M1_autodeclarada_completa", ]
+valor_dim_conc <- function(nombre) dim_m1_conc$media[dim_m1_conc$dimension == nombre]
+fmt2_conc <- function(x) formatC(x, format = "f", digits = 2, decimal.mark = ",")
+```
+
+El caso muestra un perfil favorable, pero no homogéneo, de resultados reportados de movilidad. En M1, aprendizaje (`r fmt2_conc(valor_dim_conc("aprendizaje"))`), competencias interculturales (`r fmt2_conc(valor_dim_conc("intercultural"))`) e impacto personal (`r fmt2_conc(valor_dim_conc("personal"))`) concentran las valoraciones más altas; la agrupación institucional registra una media menor (`r fmt2_conc(valor_dim_conc("institucional"))`). Cuando se aplica la definición más restrictiva de M2, el patrón general se mantiene, aunque cambian las magnitudes. La forma de clasificar una experiencia internacional no es, por tanto, una decisión neutra para la lectura de los resultados.
+
+Para la gestión universitaria, el hallazgo más útil es que la evaluación de la movilidad puede ir más allá del conteo de participaciones y destinos. Observar conjuntamente aprendizaje, desarrollo personal, aplicación académica, redes, proyectos e internacionalización curricular permite seguir lo que ocurre después de la experiencia y reconocer ámbitos que requieren mayor mediación institucional. En este marco, la movilidad virtual puede ampliar el acceso cuando los costos, la distancia o restricciones administrativas limitan el desplazamiento físico, sin que ello elimine la necesidad de evaluar sus resultados.
+
+El estudio no construye ni valida un índice de transferencia institucional. La diferencia entre impacto personal e institucional resume solo una parte del perfil y debe interpretarse junto con las cinco agrupaciones y los 25 indicadores. Del mismo modo, los bloques del cuestionario se utilizan como agrupaciones descriptivas definidas por el instrumento institucional, no como escalas psicométricas validadas.
+
+Estos resultados no permiten afirmar que la movilidad cause los cambios reportados ni generalizar el patrón a otras universidades. Se basan en autorreportes retrospectivos, una muestra pequeña, un instrumento institucional y una clasificación conservadora construida con la información disponible. Una siguiente etapa de evaluación debería incorporar mediciones longitudinales, indicadores organizacionales directos y seguimiento de productos y redes posteriores para examinar con mayor precisión la trayectoria entre experiencia internacional y resultados institucionales.

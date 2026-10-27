@@ -1,0 +1,31 @@
+# Resumen
+
+```{r}
+#| label: setup-resumen
+#| include: false
+
+resumen_muestras <- read.csv("../outputs/tables/resumen_muestras.csv", check.names = FALSE)
+dimensiones <- read.csv("../outputs/tables/dimensiones_m1_m2.csv", check.names = FALSE)
+
+m1_res <- resumen_muestras[resumen_muestras$muestra == "M1_autodeclarada_completa", ]
+dim_m1_res <- dimensiones[dimensiones$muestra == "M1_autodeclarada_completa", ]
+valor_dim_res <- function(nombre) dim_m1_res$media[dim_m1_res$dimension == nombre]
+fmt2_res <- function(x) formatC(x, format = "f", digits = 2, decimal.mark = ",")
+```
+
+Este estudio describe los resultados reportados de experiencias de movilidad en una universidad pública ecuatoriana. Las valoraciones usan una escala Likert de 1 a 5; valores cercanos a 5 indican valoraciones más favorables. La muestra principal reunió `r m1_res$n` participantes con movilidad autodeclarada y respuesta suficiente al instrumento. Las valoraciones más altas correspondieron a aprendizaje (`r fmt2_res(valor_dim_res("aprendizaje"))`), competencias interculturales (`r fmt2_res(valor_dim_res("intercultural"))`) e impacto personal (`r fmt2_res(valor_dim_res("personal"))`); la agrupación institucional registró `r fmt2_res(valor_dim_res("institucional"))`. Un análisis de sensibilidad aplicó una definición más restrictiva de internacionalidad. Los resultados sugieren complementar el seguimiento de la movilidad con información sobre aplicación académica, redes, proyectos e internacionalización curricular.
+
+**Palabras clave:** movilidad internacional; internacionalización de la educación superior; transferencia institucional; resultados de aprendizaje; educación superior.
+
+# Abstract
+
+```{r}
+#| label: setup-abstract
+#| include: false
+
+fmt2_en <- function(x) formatC(x, format = "f", digits = 2, decimal.mark = ".")
+```
+
+This study describes reported mobility outcomes at a public Ecuadorian university. Ratings use a five-point Likert scale, with values closer to 5 indicating more favorable ratings. The main sample comprised `r m1_res$n` participants with self-reported mobility and sufficient questionnaire completion. The highest ratings were observed for learning (`r fmt2_en(valor_dim_res("aprendizaje"))`), intercultural competencies (`r fmt2_en(valor_dim_res("intercultural"))`), and personal outcomes (`r fmt2_en(valor_dim_res("personal"))`); the institutional grouping averaged `r fmt2_en(valor_dim_res("institucional"))`. A sensitivity analysis applied a more restrictive definition of internationality. The findings suggest complementing mobility monitoring with information on academic application, networks, projects, and curriculum internationalization.
+
+**Keywords:** international mobility; higher education internationalization; institutional transfer; learning outcomes; higher education.

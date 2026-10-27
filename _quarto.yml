@@ -1,0 +1,12 @@
+project:
+  type: default
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: auto
+  execute-dir: project
+
+bibliography: references/references.bib
+lang: es

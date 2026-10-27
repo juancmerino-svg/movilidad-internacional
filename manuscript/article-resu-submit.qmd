@@ -1,0 +1,38 @@
+---
+title: "Experiencias internacionales y resultados institucionales reportados: evidencia de una universidad pública ecuatoriana"
+lang: es
+format:
+  docx:
+    reference-doc: ../templates/resu-reference.docx
+bibliography:
+  - ../references/references.bib
+  - ../references/references-expanded.bib
+csl: ../references/resu-adaptado.csl
+execute:
+  echo: false
+  freeze: false
+  execute-dir: project
+---
+
+{{< include resumen-draft.qmd >}}
+
+{{< include introduccion-draft.qmd >}}
+
+{{< include bases-teoricas-draft.md >}}
+
+{{< include metodologia-draft.md >}}
+
+{{< include resultados-resu-submit.qmd >}}
+
+{{< include discusion-draft.qmd >}}
+
+{{< include conclusiones-draft.qmd >}}
+
+# Referencias
+
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+{{< include elementos-resu-submit.qmd >}}
