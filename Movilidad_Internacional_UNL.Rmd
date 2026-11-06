@@ -3,7 +3,11 @@ title: "De la experiencia internacional a la capacidad institucional: resultados
 author: "Juan Carlos Merino Michay"
 date: "`r Sys.Date()`"
 lang: es
-output: github_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    self_contained: true
 bibliography:
   - references/references.bib
   - references/references-expanded.bib
