@@ -1,13 +1,19 @@
 ## Objetivo 1: descriptivo + modelo de asociación
 ## Muestras: M1 (principal) y M2 (sensibilidad)
-## Ejecutar con el proyecto abierto (.Rproj), para que las rutas relativas funcionen.
+## Ejecutar COMPLETO (Source o Ctrl + Alt + R), no por pedazos.
+## El directorio de trabajo debe ser la carpeta donde está base_trabajo.rds
+## (o la carpeta que contiene "Unidad 1").
+
+# ---- 0. Paquetes ----------------------------------------------
+paquetes <- c("tidyverse", "sandwich", "lmtest", "broom", "writexl")
+faltan <- paquetes[!sapply(paquetes, requireNamespace, quietly = TRUE)]
+if (length(faltan) > 0) install.packages(faltan)
 
 library(tidyverse)
 library(sandwich)
 library(lmtest)
 library(broom)
-# Si falta algún paquete, instálalo UNA vez desde la consola (no lo dejes en el script):
-# install.packages(c("sandwich", "lmtest", "broom"))
+library(writexl)
 
 dir.create("outputs/tablas",  recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/figuras", recursive = TRUE, showWarnings = FALSE)
@@ -16,24 +22,47 @@ dir.create("outputs/figuras", recursive = TRUE, showWarnings = FALSE)
 escala_max <- 5
 
 # ---- 1. Preparar variables -----------------------------------
-base <- readRDS("local-private/base_trabajo.rds") %>%
-  rename(rol      = matches("^Rol dentro"),
-         duracion = matches("^Duración"))
+rutas <- c("base_trabajo.rds", "Unidad 1/base_trabajo.rds")
+ruta  <- rutas[file.exists(rutas)][1]
+if (is.na(ruta)) {
+  stop("No encuentro base_trabajo.rds. Directorio actual: ", getwd(),
+       "\nUsa setwd() hacia la carpeta donde está el archivo.")
+}
+
+base0 <- readRDS(ruta)
+
+# Buscar las columnas por nombre (rol y duración)
+nm_rol <- grep("^Rol dentro", names(base0), value = TRUE)[1]
+nm_dur <- grep("^Duraci", names(base0), value = TRUE)[1]
+if (is.na(nm_rol)) stop("No encuentro la columna que empieza con 'Rol dentro'.")
+if (is.na(nm_dur)) stop("No encuentro la columna que empieza con 'Duración'.")
+
+base <- base0 %>%
+  rename(rol = all_of(nm_rol), duracion = all_of(nm_dur))
+
+dims_ind   <- c("media_aprendizaje", "media_intercultural",
+                "media_profesional", "media_personal")
+dims_todas <- c(dims_ind, "media_institucional")
+
+# Verificar que existan todas las variables que usa el script
+necesarias <- c(dims_todas, "rol", "duracion", "modalidad_analitica",
+                "muestra_m1", "muestra_m2_provisional", "n_likert_validos")
+ausentes <- setdiff(necesarias, names(base))
+if (length(ausentes) > 0) {
+  stop("Faltan estas columnas en la base: ", paste(ausentes, collapse = ", "))
+}
 
 orden_dur <- c("Menos de 1 mes", "1-3 meses", "4-6 meses",
                "7-11 meses", "Más de 12 meses")
 
 # La duración admite varias respuestas: me quedo con la más larga
 f_dur_max <- function(x) {
-  if (is.na(x)) return(NA_integer_)
+  x <- as.character(x)
+  if (length(x) == 0 || is.na(x)) return(NA_integer_)
   v <- match(str_trim(str_split(x, ";")[[1]]), orden_dur)
   v <- v[!is.na(v)]
-  if (length(v) == 0) NA_integer_ else max(v)
+  if (length(v) == 0) NA_integer_ else as.integer(max(v))
 }
-
-dims_ind   <- c("media_aprendizaje", "media_intercultural",
-                "media_profesional", "media_personal")
-dims_todas <- c(dims_ind, "media_institucional")
 
 base <- base %>%
   mutate(
@@ -55,7 +84,11 @@ m2_mod <- m2 %>% filter(!is.na(dur_cat)) %>% mutate(dur_cat = droplevels(dur_cat
 
 cat("n M1:", nrow(m1), "| n M2:", nrow(m2),
     "| n M2 con duración (modelos):", nrow(m2_mod), "\n")
-stopifnot(nrow(m1) == 43, nrow(m2) == 24)   # esperado según tu base
+
+# Esperado según tu base: solo advierte, no detiene el script
+if (nrow(m1) != 43 || nrow(m2) != 24) {
+  warning("Los n no coinciden con lo esperado (M1 = 43, M2 = 24). Revisa los filtros.")
+}
 
 # Rango observado: confirma que escala_max es correcta
 print(sapply(base[dims_todas], range, na.rm = TRUE))
@@ -186,7 +219,7 @@ ggsave("outputs/figuras/f3_brecha_m1.png", g3, width = 7, height = 4.5, dpi = 30
 
 g4 <- ggplot(m1, aes(media_individual, media_institucional)) +
   geom_jitter(width = 0.02, height = 0.02) +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
   labs(x = "Media individual", y = "Media institucional") + theme_minimal()
 ggsave("outputs/figuras/f4_dispersion_m1.png", g4, width = 6, height = 4.5, dpi = 300)
 
@@ -199,19 +232,38 @@ ggsave("outputs/figuras/f4_dispersion_m1.png", g4, width = 6, height = 4.5, dpi 
 # Interpretación: el coeficiente de media_individual es la diferencia promedio
 # en media_institucional asociada a 1 punto más de media_individual,
 # manteniendo constantes los controles. Es una asociación, no un efecto.
-mA1 <- lm(media_institucional ~ docente + dur_cat, data = m1_mod)
-mB1 <- lm(media_institucional ~ media_individual + docente + dur_cat, data = m1_mod)
 
-mA2 <- lm(media_institucional ~ docente + dur_cat + virtual, data = m2_mod)
-mB2 <- lm(media_institucional ~ media_individual + docente + dur_cat + virtual, data = m2_mod)
+# Quita del modelo las variables sin variación (evita errores en lm)
+solo_con_variacion <- function(data, vars, nombre) {
+  ok <- vapply(vars, function(v) n_distinct(data[[v]], na.rm = TRUE) > 1, logical(1))
+  if (any(!ok)) {
+    message(nombre, ": quito por no tener variación: ", paste(vars[!ok], collapse = ", "))
+  }
+  vars[ok]
+}
+ajustar <- function(data, vars, nombre) {
+  lm(reformulate(solo_con_variacion(data, vars, nombre), "media_institucional"),
+     data = data)
+}
 
-# Tabla con errores robustos HC3
+mA1 <- ajustar(m1_mod, c("docente", "dur_cat"), "m1 - Modelo A")
+mB1 <- ajustar(m1_mod, c("media_individual", "docente", "dur_cat"), "m1 - Modelo B")
+mA2 <- ajustar(m2_mod, c("docente", "dur_cat", "virtual"), "m2 - Modelo A")
+mB2 <- ajustar(m2_mod, c("media_individual", "docente", "dur_cat", "virtual"), "m2 - Modelo B")
+
+# Tabla con errores robustos HC3 (si falla, usa errores clásicos)
 tabla_robusta <- function(mod, nombre) {
   if (anyNA(coef(mod)))
     warning(nombre, ": hay coeficientes no estimables (alguna variable sin variación).")
-  vc <- vcovHC(mod, type = "HC3")
-  ct <- coeftest(mod, vcov. = vc)
-  ci <- coefci(mod, vcov. = vc)
+  est <- tryCatch({
+    vc <- vcovHC(mod, type = "HC3")
+    list(ct = coeftest(mod, vcov. = vc), ci = coefci(mod, vcov. = vc))
+  }, error = function(e) {
+    warning(nombre, ": HC3 falló, uso errores estándar clásicos.")
+    list(ct = coeftest(mod), ci = coefci(mod))
+  })
+  ct <- est$ct
+  ci <- est$ci
   tibble(modelo = nombre,
          termino = rownames(ct),
          coef = ct[, 1], ee_robusto = ct[, 2], p = ct[, 4],
@@ -233,13 +285,10 @@ write_csv(tabla_modelos, "outputs/tablas/t7_modelos_regresion.csv")
 par(mfrow = c(2, 2)); plot(mB1)
 par(mfrow = c(2, 2)); plot(mB2)
 par(mfrow = c(1, 1))
-shapiro.test(residuals(mB1)); shapiro.test(residuals(mB2))
-bptest(mB1); bptest(mB2)
+print(shapiro.test(residuals(mB1))); print(shapiro.test(residuals(mB2)))
+print(bptest(mB1)); print(bptest(mB2))
 
-##para ponerlas como tablas excel
-install.packages("writexl")   # solo la primera vez
-library(writexl)
-
+# ---- 6. Exportar todas las tablas a Excel ---------------------
 write_xlsx(
   list(t1_perfil      = tab_perfil,
        t2_dimensiones = tab_dim,
@@ -250,3 +299,5 @@ write_xlsx(
        t7_modelos     = tabla_modelos),
   "outputs/tablas/tablas_resultados.xlsx"
 )
+
+cat("Listo. Tablas en outputs/tablas y figuras en outputs/figuras.\n")
