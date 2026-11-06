@@ -1,13 +1,14 @@
 ---
 title: "De la experiencia internacional a la capacidad institucional: resultados individuales y brechas de transferencia en una universidad pública ecuatoriana"
 author: "Juan Carlos Merino Michay"
-date: "`r Sys.Date()`"
+date: today
+date-format: "DD/MM/YYYY"
 lang: es
-output:
-  html_document:
+format:
+  html:
     toc: true
-    toc_float: true
-    self_contained: true
+    toc-location: left
+    embed-resources: true
 bibliography:
   - references/references.bib
   - references/references-expanded.bib
@@ -15,7 +16,6 @@ bibliography:
 csl: references/resu-adaptado.csl
 link-citations: true
 ---
-
 
 **¿Cómo se distribuyen los resultados reportados de las experiencias internacionales entre dimensiones individuales e institucionales y qué revela el caso de la Universidad Nacional de Loja sobre la transferencia del aprendizaje internacional hacia capacidades organizacionales?**
 
