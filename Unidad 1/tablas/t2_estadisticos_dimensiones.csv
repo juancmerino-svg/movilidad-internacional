@@ -1,0 +1,15 @@
+muestra,variable,n,media,de,mediana,minimo,maximo
+M1,media_aprendizaje,43,4.5,0.93,5,1,5
+M1,media_intercultural,43,4.46,1.05,5,1,5
+M1,media_profesional,43,4.17,1.01,4.6,1,5
+M1,media_personal,43,4.47,0.92,5,1.4,5
+M1,media_institucional,43,4.01,1.16,4.4,1,5
+M1,media_individual,43,4.4,0.92,4.75,1.1,5
+M1,brecha,43,0.38,0.75,0.15,-1.25,2.9
+M2,media_aprendizaje,24,4.75,0.39,5,3.8,5
+M2,media_intercultural,24,4.88,0.25,5,4,5
+M2,media_profesional,24,4.42,0.66,4.6,2.8,5
+M2,media_personal,24,4.8,0.4,5,3.6,5
+M2,media_institucional,24,4.39,0.72,4.8,2.6,5
+M2,media_individual,24,4.71,0.35,4.82,3.75,5
+M2,brecha,24,0.32,0.64,0.2,-1.25,1.85
